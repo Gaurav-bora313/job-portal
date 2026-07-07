@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Job - Admin</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #e9ecef; margin: 0; padding: 30px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h2 { color: #343a40; margin-top: 0; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #495057; }
+        input[type="text"], select { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; box-sizing: border-box; }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; text-decoration: none; display: inline-block; }
+        .btn-submit { background: #28a745; color: white; width: 100%; }
+        .btn-cancel { background: #6c757d; color: white; margin-top: 10px; text-align: center; width: 100%; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Create Job Posting</h2>
+    <form action="/admin/jobs/add" method="POST">
+        <div class="form-group"><label>Company Name *</label><input type="text" name="company" required></div>
+        <div class="form-group"><label>Job Type *</label><input type="text" name="job_type" placeholder="e.g. Full-time" required></div>
+        <div class="form-group"><label>Qualifications</label><input type="text" name="qualifications"></div>
+        <div class="form-group"><label>Paycheck</label><input type="text" name="paycheck"></div>
+        <div class="form-group"><label>Location</label><input type="text" name="location"></div>
+        <div class="form-group"><label>Working Hours</label><input type="text" name="working_hours"></div>
+        <div class="form-group">
+            <label>Job Nature *</label>
+            <select name="job_nature" required>
+                <option value="Remote">Remote</option>
+                <option value="Desk Job">Desk Job</option>
+                <option value="Hybrid">Hybrid</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-submit">Save Job Posting</button>
+        <a href="/admin" class="btn btn-cancel">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

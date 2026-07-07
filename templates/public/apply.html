@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Apply for Job</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 90vh; }
+        .container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 500px; }
+        h2 { color: #0056b3; text-align: center; margin-top: 0; }
+        .job-info { background: #eef5ff; padding: 15px; border-radius: 5px; margin-bottom: 20px; font-size: 14px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #555; font-size: 14px; }
+        input[type="text"], input[type="file"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; }
+        .checkbox-group input { width: auto; }
+        .error { color: #dc3545; background: #f8d7da; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 14px; }
+        .button-group { display: flex; gap: 10px; }
+        button { flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-submit { background: #28a745; color: white; }
+        .btn-cancel { background: #6c757d; color: white; text-decoration: none; text-align: center; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Apply for Position</h2>
+    <div class="job-info">
+        <strong>{{ job.company }}</strong> - {{ job.job_type }}<br>
+        <small>Requirements: {{ job.qualifications }}</small>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="error">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form action="/apply/{{ job.id }}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" name="name" required>
+        </div>
+        <div class="form-group">
+            <label>Contact Details (Email/Phone) *</label>
+            <input type="text" name="contact" required>
+        </div>
+        <div class="form-group">
+            <label>Resume (.txt file only) *</label>
+            <input type="file" name="resume" accept=".txt" required>
+        </div>
+        <div class="form-group">
+            <label>Statement of Purpose (.txt file only) *</label>
+            <input type="file" name="sop" accept=".txt" required>
+        </div>
+        <div class="form-group checkbox-group">
+            <input type="checkbox" id="qualify" name="qualify" required>
+            <label for="qualify" style="font-weight: normal;">I confirm I meet the qualifications for this role.</label>
+        </div>
+        <div class="button-group">
+            <button type="submit" class="btn-submit">Submit Application</button>
+            <a href="/" class="btn-cancel btn">Cancel</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

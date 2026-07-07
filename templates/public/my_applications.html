@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Application Status</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; }
+        
+        /* Lookup Form */
+        .lookup-box { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 30px; text-align: center; }
+        .lookup-box h2 { margin-top: 0; color: #0056b3; }
+        .lookup-form { display: flex; gap: 10px; max-width: 500px; margin: 20px auto 0; }
+        .lookup-form input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
+        .lookup-form button { background: #0056b3; color: white; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #0056b3; text-decoration: none; font-weight: bold; }
+
+        /* Stats Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-top: 5px solid #ccc; }
+        .stat-card.total { border-color: #0056b3; }
+        .stat-card.accepted { border-color: #28a745; }
+        .stat-card.rejected { border-color: #dc3545; }
+        .stat-number { font-size: 36px; font-weight: bold; margin: 0; }
+        .stat-label { color: #666; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+
+        /* Application List */
+        .app-list { display: flex; flex-direction: column; gap: 15px; }
+        .app-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; border-left: 5px solid #ccc; }
+        .app-card.Pending { border-left-color: #ffc107; }
+        .app-card.Accepted { border-left-color: #28a745; }
+        .app-card.Rejected { border-left-color: #dc3545; }
+        
+        .app-info h3 { margin: 0 0 5px 0; color: #333; }
+        .app-meta { font-size: 13px; color: #666; }
+        .status-badge { padding: 8px 16px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+        .status-badge.Pending { background: #fff3cd; color: #856404; }
+        .status-badge.Accepted { background: #d4edda; color: #155724; }
+        .status-badge.Rejected { background: #f8d7da; color: #721c24; }
+        
+        .no-results { text-align: center; color: #888; padding: 40px; background: white; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="/" class="back-link">&larr; Back to Job Listings</a>
+
+    <div class="lookup-box">
+        <h2>Check Your Application Status</h2>
+        <p style="color:#666;">Enter the contact details (Email or Phone) you used when applying.</p>
+        <form action="/my-applications" method="POST" class="lookup-form">
+            <input type="text" name="contact" placeholder="Email or Phone Number..." value="{{ contact }}" required>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    {% if contact %}
+        <!-- Show Stats only if a search has been made -->
+        <div class="stats-grid">
+            <div class="stat-card total">
+                <p class="stat-number" style="color:#0056b3;">{{ applications|length }}</p>
+                <p class="stat-label">Total Applied</p>
+            </div>
+            <div class="stat-card accepted">
+                <p class="stat-number" style="color:#28a745;">{{ accepted_count }}</p>
+                <p class="stat-label">Accepted</p>
+            </div>
+            <div class="stat-card rejected">
+                <p class="stat-number" style="color:#dc3545;">{{ rejected_count }}</p>
+                <p class="stat-label">Rejected</p>
+            </div>
+        </div>
+
+        <!-- Show Application List -->
+        <div class="app-list">
+            {% for app in applications %}
+            <div class="app-card {{ app.status }}">
+                <div class="app-info">
+                    <h3>{{ app.company_applied }}</h3>
+                    <div class="app-meta">
+                        Code: <strong>{{ app.application_code }}</strong> | 
+                        Applied: {{ app.applied_at }}
+                    </div>
+                </div>
+                <div class="status-badge {{ app.status }}">
+                    {{ app.status }}
+                </div>
+            </div>
+            {% else %}
+            <div class="no-results">
+                No applications found for "<strong>{{ contact }}</strong>". Please make sure you are typing the exact contact details used during application.
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

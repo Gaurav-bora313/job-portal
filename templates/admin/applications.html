@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Review Applications - Admin</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #e9ecef; margin: 0; }
+        .top-nav { background: #343a40; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .top-nav a { color: #adb5bd; text-decoration: none; margin-left: 20px; }
+        .top-nav a:hover { color: white; }
+        .content { max-width: 1300px; margin: 30px auto; padding: 0 20px; }
+        .filters { margin-bottom: 20px; }
+        .filters a { text-decoration: none; padding: 8px 15px; background: white; border: 1px solid #ccc; border-radius: 20px; margin-right: 5px; color: #495057; font-weight: bold; }
+        .filters a.active { background: #343a40; color: white; border-color: #343a40; }
+        .card { background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 5px solid #17a2b8; }
+        .card.accepted { border-left-color: #28a745; background: #f8fff8; }
+        .card.rejected { border-left-color: #dc3545; background: #fff8f8; opacity: 0.8; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .badge { font-family: monospace; background: #e9ecef; padding: 5px 10px; border-radius: 4px; font-weight: bold; }
+        .status-badge { padding: 5px 10px; border-radius: 4px; color: white; font-size: 12px; font-weight: bold; }
+        .status-Pending { background: #ffc107; color: black; }
+        .status-Accepted { background: #28a745; }
+        .status-Rejected { background: #dc3545; }
+        .docs { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px; }
+        .doc-box { background: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 4px; height: 200px; overflow-y: auto; font-family: monospace; font-size: 13px; white-space: pre-wrap;}
+        .doc-title { font-weight: bold; margin-bottom: 5px; color: #495057; }
+        .action-btns { display: flex; gap: 10px; }
+        .btn-accept { background: #28a745; color: white; text-decoration: none; padding: 6px 12px; border-radius: 4px; font-size: 13px; }
+        .btn-reject { background: #dc3545; color: white; text-decoration: none; padding: 6px 12px; border-radius: 4px; font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class="top-nav">
+        <h2 style="margin:0;">Application Management</h2>
+        <div>
+            <a href="/admin">Manage Jobs</a>
+            <a href="/">View Public Site</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="filters">
+            <strong>Filter Status:</strong>
+            <a href="/admin/applications?status=All" class="{% if current_status == 'All' %}active{% endif %}">All</a>
+            <a href="/admin/applications?status=Pending" class="{% if current_status == 'Pending' %}active{% endif %}">Pending</a>
+            <a href="/admin/applications?status=Accepted" class="{% if current_status == 'Accepted' %}active{% endif %}">Accepted</a>
+            <a href="/admin/applications?status=Rejected" class="{% if current_status == 'Rejected' %}active{% endif %}">Rejected</a>
+        </div>
+
+        {% for app in applications %}
+        <div class="card {{ app.status.lower() }}">
+            <div class="card-header">
+                <div>
+                    <h3 style="margin:0 0 5px 0;">{{ app.applicant_name }}</h3>
+                    <small style="color:#666;">Applied for: <strong>{{ app.company_applied }}</strong> | Contact: {{ app.contact_details }}</small>
+                </div>
+                <div style="text-align: right;">
+                    <div class="badge">{{ app.application_code }}</div>
+                    <div class="status-badge status-{{ app.status }}" style="margin-top: 5px;">{{ app.status }}</div>
+                </div>
+            </div>
+            
+            <small style="color:#888;">Submitted: {{ app.applied_at }}</small>
+
+            {% if app.status == 'Pending' %}
+            <div class="action-btns" style="margin-top: 10px;">
+                <a href="/admin/applications/update/{{ app.id }}/Accept" class="btn-accept" onclick="return confirm('Accept this applicant?')">Accept Applicant</a>
+                <a href="/admin/applications/update/{{ app.id }}/Reject" class="btn-reject" onclick="return confirm('Reject this applicant?')">Reject Applicant</a>
+            </div>
+            {% endif %}
+
+            <div class="docs">
+                <div>
+                    <div class="doc-title">Resume (.txt content):</div>
+                    <div class="doc-box">{{ app.resume_text if app.resume_text else 'No data.' }}</div>
+                </div>
+                <div>
+                    <div class="doc-title">Statement of Purpose (.txt content):</div>
+                    <div class="doc-box">{{ app.sop_text if app.sop_text else 'No data.' }}</div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div style="background:white; padding:40px; text-align:center; border-radius:8px; color:#888;">
+            No applications found with this status.
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

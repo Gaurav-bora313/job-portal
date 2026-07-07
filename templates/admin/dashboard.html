@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HR Admin Portal</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #e9ecef; margin: 0; }
+        .top-nav { background: #343a40; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .top-nav a { color: #adb5bd; text-decoration: none; margin-left: 20px; }
+        .top-nav a:hover { color: white; }
+        .content { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn { display: inline-block; padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; }
+        table { width: 100%; background: white; border-collapse: collapse; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #dee2e6; }
+        th { background: #495057; color: white; }
+        .del-btn { background: #dc3545; color: white; text-decoration: none; padding: 4px 10px; border-radius: 3px; font-size: 12px; }
+        .del-btn:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+        <div class="top-nav">
+        <h2 style="margin:0;">Admin Portal</h2>
+        <div>
+            <a href="/admin/applications">View Applications</a>
+            <a href="/">View Public Site</a>
+            <a href="/admin/logout" style="color: #ff6b6b; font-weight: bold;">Logout</a>
+        </div>
+    </div>
+    </div>
+    
+    <div class="content">
+        <div class="header">
+            <h2>Manage Job Postings</h2>
+            <a href="/admin/jobs/add" class="btn">+ Add New Job</a>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Company</th>
+                    <th>Type</th>
+                    <th>Location</th>
+                    <th>Nature</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td>{{ job.id }}</td>
+                    <td>{{ job.company }}</td>
+                    <td>{{ job.job_type }}</td>
+                    <td>{{ job.location }}</td>
+                    <td>{{ job.job_nature }}</td>
+                    <td><a href="/admin/jobs/delete/{{ job.id }}" class="del-btn" onclick="return confirm('Delete this posting?')">Delete</a></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" style="text-align:center; padding:40px; color:#888;">No jobs posted yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

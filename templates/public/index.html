@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Career Portal - Find Jobs</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; margin: 0; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .filter-bar { background: #f8f9fa; padding: 15px; border-radius: 6px; margin-bottom: 25px; display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end; }
+        .f-group { display: flex; flex-direction: column; flex: 1; min-width: 140px; }
+        .f-group label { font-size: 12px; font-weight: bold; color: #555; margin-bottom: 4px; }
+        .f-group input, .f-group select { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        .btn-search { background: #0056b3; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #0056b3; color: white; font-size: 14px; }
+        .apply-link { background: #28a745; color: white; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-size: 13px; }
+        .apply-link:hover { background: #218838; }
+        .empty { text-align: center; color: #888; padding: 40px; }
+        .clear-btn { text-decoration: none; padding: 8px 15px; background: #eee; border-radius: 4px; color: #333; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+        <h1 style="margin:0;">Open Positions</h1>
+        <p style="color:#666; margin:5px 0 0 0;">Find your next career opportunity</p>
+    </div>
+        <a href="/my-applications" style="background:#0056b3; color:white; padding:10px 20px; text-decoration:none; border-radius:5px; font-weight:bold;">Check My Applications</a>
+    </div>
+    <div class="container">
+        <form action="/" method="GET" class="filter-bar">
+            <div class="f-group">
+                <label>Keyword</label>
+                <input type="text" name="keyword" placeholder="Skills, titles..." value="{{ keyword }}">
+            </div>
+            <div class="f-group">
+                <label>Company</label>
+                <input type="text" name="company" placeholder="Company name" value="{{ company }}">
+            </div>
+            <div class="f-group">
+                <label>Type</label>
+                <select name="job_type">
+                    <option value="">All</option>
+                    <option value="Full-time" {% if job_type == 'Full-time' %}selected{% endif %}>Full-time</option>
+                    <option value="Part-time" {% if job_type == 'Part-time' %}selected{% endif %}>Part-time</option>
+                    <option value="Contract" {% if job_type == 'Contract' %}selected{% endif %}>Contract</option>
+                </select>
+            </div>
+            <div class="f-group">
+                <label>Nature</label>
+                <select name="job_nature">
+                    <option value="">All</option>
+                    <option value="Remote" {% if job_nature == 'Remote' %}selected{% endif %}>Remote</option>
+                    <option value="Desk Job" {% if job_nature == 'Desk Job' %}selected{% endif %}>Desk Job</option>
+                    <option value="Hybrid" {% if job_nature == 'Hybrid' %}selected{% endif %}>Hybrid</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-search">Search</button>
+            <a href="/" class="clear-btn">Clear</a>
+        </form>
+
+        {% if jobs %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Company</th>
+                    <th>Type</th>
+                    <th>Paycheck</th>
+                    <th>Location</th>
+                    <th>Nature</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr>
+                    <td><strong>{{ job.company }}</strong><br><small>{{ job.qualifications }}</small></td>
+                    <td>{{ job.job_type }}</td>
+                    <td>{{ job.paycheck }}</td>
+                    <td>{{ job.location }}</td>
+                    <td>{{ job.job_nature }}</td>
+                    <td><a href="/apply/{{ job.id }}" class="apply-link">Apply Now</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="empty">No jobs found matching your criteria.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
